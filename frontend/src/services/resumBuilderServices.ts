@@ -35,3 +35,4 @@ export const retrieveMasterResume = async (userId: number) => {
         return { error: err, success: false }
     }
 }
+

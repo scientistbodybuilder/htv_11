@@ -11,6 +11,7 @@
 - Destructure props in the function signature
 - Provide guards against undefined / null props when necessary
 - Name files with PascalCasing
+- Keep code Modular with components, avoid repeated code excessively
 
 # Principles
 - Stop and ask for confirmation before adding a new dependency

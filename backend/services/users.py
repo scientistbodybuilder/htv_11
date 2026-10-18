@@ -5,6 +5,7 @@ def get_user_resume(id: int):
         result = client.table("resume_blocks").select("*").eq("user_id", id).execute()
         print('get',result.data)
         return { "success": True, "data": [{
+            'id': x['id'],
             'type': x['type'],
             'startDate': x['start_date'],
             'endDate': x['end_date'],

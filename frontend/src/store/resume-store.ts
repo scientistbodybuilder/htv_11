@@ -1,7 +1,7 @@
 import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
 export interface ResumeBlock {
-  id: string
+  id: number
   type: string
   startDate: string
   endDate: string
@@ -15,7 +15,7 @@ interface ResumeStore {
   resumeBlocks: ResumeBlock[]
   addBlock: (block: ResumeBlock) => void
   addBlocks: (blocks: ResumeBlock[]) => void
-  removeBlock: (id: string) => void
+  removeBlock: (id: number) => void
   clearBlocks: () => void
 }
 

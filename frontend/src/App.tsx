@@ -1,8 +1,10 @@
 import './App.css'
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom'
 import Header from './components/Header'
 import ResumeBuilder from './components/resume-builder/ResumeBuilder'
 import UploadResume from './components/resume-builder/UploadResume'
+import Polish from './components/polish/Polish'
+import Review from './components/review/Review'
 
 
 function MainLayout() {
@@ -21,9 +23,12 @@ function App() {
     <Router>
       <Routes>
         <Route element={<MainLayout />}>
-          <Route path="/" element={<UploadResume />} />
+          <Route path="/upload" element={<UploadResume />} />
           <Route path="/builder" element={<ResumeBuilder />} />
+          <Route path="/polish" element={<Polish />} />
+          <Route path="/review" element={<Review />} />
         </Route>
+        <Route path="*" element={<Navigate to="/upload" replace />} />
       </Routes>
     </Router>
   )

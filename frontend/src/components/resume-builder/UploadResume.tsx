@@ -6,12 +6,19 @@ import { useNavigate } from 'react-router-dom'
 import UploadCard from './UploadCard'
 import { retrieveMasterResume } from '../../services/resumBuilderServices'
 import {useResumeStore} from '../../store/resume-store'
+import { useBuilderStore } from '@/store/builder-store'
 
 const UploadResume = () => {
     const navigate = useNavigate()
     const { addBlocks, clearBlocks } = useResumeStore()
+    const { resetSectionBlocks } = useBuilderStore()
     const [resumeAvailable, setResumeAvailable] = useState<null | boolean>(null)
     const [loadingResume, setLoadingResume] = useState(false)
+
+    const goToBuilderPage = () => {
+        resetSectionBlocks()
+        navigate('/builder')
+    }
     
     useEffect(() => {
         const checkResumeAvailability = async () => {
@@ -47,7 +54,7 @@ const UploadResume = () => {
                 <p className="text-xs text-(--priamry) m-0">Looking for your resume</p>
                 <Spinner className="text-(--primary)" />
                 </div>}
-            {resumeAvailable === true && <div className="p-4 text-sm text-(--primary)">Resume available. <span className="underline cursor-pointer hover:text-(--primary)/60" onClick={() => navigate('/builder')}>continue</span></div>}
+            {resumeAvailable === true && <div className="p-4 text-sm text-(--primary)">Resume available. <span className="underline cursor-pointer hover:text-(--primary)/60" onClick={() => goToBuilderPage()}>continue</span></div>}
             {resumeAvailable === false && <div className="p-4 text-xs text-(--priamry)">No resume available. Please upload one.</div>}
             <main className="min-h-0 w-full overflow-y-auto p-4 md:p-6">
             

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { uploadMasterResume } from '../../services/resumBuilderServices'
 import {useResumeStore} from '../../store/resume-store'
+import { useBuilderStore } from '@/store/builder-store'
+import { useNavigate } from 'react-router-dom'
 
 type ResumeFile = {
   name: string
@@ -24,8 +26,10 @@ const UploadCard = () => {
     const [error, setError] = useState("")
     const [isDragging, setIsDragging] = useState(false)
     const [uploading, setUploading] = useState(false)
+    const [resumeReady, setResumeReady] = useState(false)
     const { addBlock } = useResumeStore()
-  
+    const { resetSectionBlocks } = useBuilderStore()
+    const navigate = useNavigate()
     const selectFile = (file?: File) => {
       if (!file) return
   
@@ -43,6 +47,11 @@ const UploadCard = () => {
         status: "Ready to parse",
       })
     }
+
+    const goToBuilderPage = () => {
+        resetSectionBlocks()
+        navigate('/builder')
+    }
   
     const uploadResume = async (file: File|null) => {
       if (!file) return
@@ -54,6 +63,7 @@ const UploadCard = () => {
         result.result.forEach((block: any) => {
           addBlock(block)
         })
+        setResumeReady(true)
       } catch (err) {
         console.error('Error uploading resume:', err)
       } finally {
@@ -134,7 +144,6 @@ const UploadCard = () => {
               )}
               <div className="mt-3 flex gap-2 text-[10px] font-medium uppercase tracking-wide text-[#817773]">
                 <span className="rounded bg-[#f7e9e2] px-2 py-0.5">.PDF</span>
-                <span className="rounded bg-[#f7e9e2] px-2 py-0.5">.DOCX</span>
               </div>
             </div>
 
@@ -142,23 +151,16 @@ const UploadCard = () => {
                 {uploading ? <Spinner /> : "Upload"}
             </Button>
 
-            {/* <div className="mt-4 flex items-center gap-3 rounded-xl bg-[#fff1e9] p-4">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#f4e3db] text-[#984629]">
-                <FileText className="size-5" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="truncate text-sm font-medium text-[#2b1e1a]">{resume.name}</p>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#f8dfd3] px-2 py-0.5 text-[10px] font-medium text-[#773b25]">
-                    <span className="size-1.5 rounded-full bg-[#984629]" />
-                    {resume.status === "Ready to parse" ? "Ready" : "Extracted"}
-                  </span>
-                </div>
-                <p className="mt-0.5 text-xs leading-5 text-[#817773]">
-                  {resume.size} · {resume.status}
-                </p>
-              </div>
-            </div> */}
+            {resumeReady && (
+              <button
+                type="button"
+                onClick={() => goToBuilderPage()}
+                className="mt-4 cursor-pointer inline-flex h-9 items-center gap-2 rounded-lg bg-(--primary) px-4 text-sm font-medium text-white transition-colors hover:bg-(--primary)/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#984629]"
+              >
+                Continue to Builder
+              </button>
+            )}
+
           </Card>
     )
 }

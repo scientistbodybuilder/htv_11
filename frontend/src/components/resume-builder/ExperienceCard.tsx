@@ -1,14 +1,39 @@
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import type { ResumeBlock } from "@/store/resume-store"
+import {useSortable} from '@dnd-kit/react/sortable';
+import { GripVertical, X } from 'lucide-react'
+import { useRef, useState } from "react";
 
 interface ExperienceCardProps {
   block: ResumeBlock|null
+  id:string
+  index:number
+  group: string
 }
 
-const ExperienceCard = ({ block }: ExperienceCardProps) => {
+const ExperienceCard = ({ block, id, index, group }: ExperienceCardProps) => {
+    const [element, setElement] = useState<Element | null>(null);
+    const handleRef = useRef<HTMLButtonElement | null>(null);
+    const {isDragging} = useSortable({
+        id, 
+        index, 
+        element, 
+        handle: handleRef, 
+        group,
+        type:group,
+        accept:group
+    });
+
+
     if (!block) return null
     return (
-        <Card className="w-full cursor-grab border border-(--primary)/10 bg-white text-(--primary) shadow-none ring-0 active:cursor-grabbing">
+        <Card ref={setElement} data-shadow={isDragging || undefined} className="w-full border border-(--primary)/10 bg-white text-(--primary) shadow-none ring-0 active:cursor-grabbing">
+            <CardHeader className="w-full flex items-center justify-end gap-2">
+                <X className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-foreground" />
+                <button ref={handleRef} aria-label="Drag section to reorder" className="drag-handle cursor-grab text-(--secondary)">
+                    <GripVertical className="size-4" />
+                </button>
+            </CardHeader>
             <CardContent className="flex items-start gap-2 p-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
@@ -26,8 +51,8 @@ const ExperienceCard = ({ block }: ExperienceCardProps) => {
                 )}
                 {block.bullets.length > 0 && (
                     <ul className="mb-0 mt-2 list-disc space-y-1 pl-4 text-xs leading-5 text-(--primary)/80">
-                    {block.bullets.map((bullet, index) => (
-                        <li key={`${block.id}-${index}`}>{bullet}</li>
+                    {block.bullets.map((bullet, bulletIndex) => (
+                        <li key={`${block.id}-${bulletIndex}`}>{bullet}</li>
                     ))}
                     </ul>
                 )}
